@@ -27,6 +27,8 @@ class ConfigurationParser
                 $key = "{$handle}_{$field['handle']}";
                 if (isset($blueprintConfig[$key])) {
                     $config[$field['handle']] = $blueprintConfig[$key];
+                } elseif (isset($field['field']['default'])) {
+                    $config[$field['handle']] = $field['field']['default'];
                 }
             }
             
