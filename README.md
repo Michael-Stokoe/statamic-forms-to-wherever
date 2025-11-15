@@ -203,4 +203,8 @@ MIT License - Build amazing things with it!
 
 ## Support
 
-Found a bug or need a feature? [Open an issue](https://github.com/stokoe/forms-to-wherever/issues) or contribute to make Forms To Wherever even better.
+Found a bug or need a feature? Visit the [Statamic Marketplace](https://statamic.com/addons/stokoe/forms-to-wherever) or contribute to make Forms To Wherever even better.
+
+## Available Connectors
+
+- **[Mailchimp Connector](https://statamic.com/addons/stokoe/forms-to-mailchimp-connector)** - Connect forms to Mailchimp lists with advanced field mapping
