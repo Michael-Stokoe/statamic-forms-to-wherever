@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stokoe\FormsToWherever\Connectors;
 
 use Illuminate\Support\Facades\Http;
@@ -45,6 +47,30 @@ class WebhookConnector implements ConnectorInterface
                 ],
             ],
             [
+                'handle' => 'auth_header',
+                'field' => [
+                    'type' => 'text',
+                    'display' => 'Authorization Header',
+                    'instructions' => 'Optional: Bearer token or API key for authentication',
+                ],
+            ],
+            [
+                'handle' => 'secret_key',
+                'field' => [
+                    'type' => 'text',
+                    'display' => 'Secret Key',
+                    'instructions' => 'Optional: Secret key for request signing (HMAC-SHA256)',
+                ],
+            ],
+            [
+                'handle' => 'allowed_ips',
+                'field' => [
+                    'type' => 'textarea',
+                    'display' => 'Allowed IPs',
+                    'instructions' => 'Optional: Comma-separated list of allowed IP addresses/ranges',
+                ],
+            ],
+            [
                 'handle' => 'field_mapping',
                 'field' => [
                     'type' => 'grid',
@@ -80,8 +106,11 @@ class WebhookConnector implements ConnectorInterface
         $url = $config['url'] ?? null;
         $method = strtolower($config['method'] ?? 'post');
         $fieldMapping = $config['field_mapping'] ?? [];
+        $authHeader = $config['auth_header'] ?? null;
+        $secretKey = $config['secret_key'] ?? null;
+        $allowedIps = $config['allowed_ips'] ?? null;
 
-        if (! $url) {
+        if (!$url) {
             return;
         }
 
@@ -89,6 +118,16 @@ class WebhookConnector implements ConnectorInterface
         if (!filter_var($url, FILTER_VALIDATE_URL) || 
             !in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'])) {
             Log::warning('Invalid webhook URL', [
+                'url' => $url,
+                'form' => $submission->form()->handle(),
+                'submission_id' => $submission->id(),
+            ]);
+            return;
+        }
+
+        // IP allowlist check
+        if ($allowedIps && !$this->isIpAllowed($url, $allowedIps)) {
+            Log::warning('Webhook URL not in allowed IPs', [
                 'url' => $url,
                 'form' => $submission->form()->handle(),
                 'submission_id' => $submission->id(),
@@ -113,14 +152,36 @@ class WebhookConnector implements ConnectorInterface
                 }
             }
         } else {
-            // If no mapping, include all form data
             $data['data'] = $submission->data();
         }
 
+        $headers = ['Content-Type' => 'application/json'];
+        
+        // Add authorization header
+        if ($authHeader) {
+            $headers['Authorization'] = $authHeader;
+        }
+        
+        // Add signature header
+        if ($secretKey) {
+            $payload = json_encode($data);
+            $signature = hash_hmac('sha256', $payload, $secretKey);
+            $headers['X-Signature-SHA256'] = 'sha256=' . $signature;
+        }
+
         try {
-            $response = Http::timeout(10)->$method($url, $data);
+            $response = Http::timeout(10)->withHeaders($headers)->$method($url, $data);
             
-            if (!$response->successful()) {
+            if ($response->successful()) {
+                Log::info('Webhook request successful', [
+                    'status' => $response->status(),
+                    'url' => $url,
+                    'method' => $method,
+                    'form' => $submission->form()->handle(),
+                    'submission_id' => $submission->id(),
+                    'response_time' => $response->transferStats?->getTransferTime(),
+                ]);
+            } else {
                 Log::warning('Webhook request failed', [
                     'status' => $response->status(),
                     'url' => $url,
@@ -137,7 +198,22 @@ class WebhookConnector implements ConnectorInterface
                 'form' => $submission->form()->handle(),
                 'submission_id' => $submission->id(),
             ]);
-            // Don't throw - let form submission continue
         }
+    }
+
+    protected function isIpAllowed(string $url, string $allowedIps): bool
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+        $ip = gethostbyname($host);
+        
+        $allowedList = array_map('trim', explode(',', $allowedIps));
+        
+        foreach ($allowedList as $allowed) {
+            if ($ip === $allowed || $host === $allowed) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

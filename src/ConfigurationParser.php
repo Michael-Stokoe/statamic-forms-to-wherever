@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Stokoe\FormsToWherever;
+
+use Stokoe\FormsToWherever\Contracts\ConnectorInterface;
 
 class ConfigurationParser
 {
@@ -34,7 +38,7 @@ class ConfigurationParser
         return $connectors;
     }
 
-    protected function isValidConfig($connector, array $config): bool
+    protected function isValidConfig(ConnectorInterface $connector, array $config): bool
     {
         foreach ($connector->fieldset() as $field) {
             $validation = $field['field']['validate'] ?? '';

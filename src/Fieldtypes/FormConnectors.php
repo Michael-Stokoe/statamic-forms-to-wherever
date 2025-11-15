@@ -26,6 +26,20 @@ class FormConnectors extends Fieldtype
         $connectorManager = app(ConnectorManager::class);
         $sections = [];
 
+        // Global settings section
+        $sections[] = [
+            'display' => 'Processing Settings',
+            'fields' => [
+                'async_processing' => [
+                    'display' => 'Asynchronous Processing',
+                    'type' => 'toggle',
+                    'instructions' => 'Process connectors in background jobs (recommended for production)',
+                    'default' => true,
+                    'width' => 100,
+                ],
+            ],
+        ];
+
         foreach ($connectorManager->all() as $handle => $connector) {
             $fields = [
                 $handle . '_enabled' => [
