@@ -38,7 +38,7 @@ class ProcessConnectors
             foreach ($connectors as $connectorConfig) {
                 if ($useAsync) {
                     ProcessConnectorJob::dispatch(
-                        $submission->id(),
+                        $submission,
                         $connectorConfig['type'],
                         $connectorConfig
                     );

@@ -208,3 +208,4 @@ Found a bug or need a feature? Visit the [Statamic Marketplace](https://statamic
 ## Available Connectors
 
 - **[Mailchimp Connector](https://statamic.com/addons/stokoe/forms-to-mailchimp-connector)** - Connect forms to Mailchimp lists with advanced field mapping
+- **[HubSpot Connector](https://statamic.com/addons/stokoe/forms-to-hubspot-connector)** - Create and update HubSpot contacts with custom property mapping

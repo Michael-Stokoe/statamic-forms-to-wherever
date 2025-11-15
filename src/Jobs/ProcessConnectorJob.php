@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Stokoe\FormsToWherever\ConnectorManager;
-use Statamic\Forms\Submission;
+use Statamic\Contracts\Forms\Submission;
 
 class ProcessConnectorJob implements ShouldQueue
 {
@@ -21,44 +21,34 @@ class ProcessConnectorJob implements ShouldQueue
     public int $backoff = 60;
 
     public function __construct(
-        public string $submissionId,
+        public Submission $submission,
         public string $connectorType,
         public array $connectorConfig
     ) {}
 
     public function handle(ConnectorManager $connectorManager): void
     {
-        $submission = Submission::find($this->submissionId);
-        
-        if (!$submission) {
-            Log::warning('Submission not found for connector processing', [
-                'submission_id' => $this->submissionId,
-                'connector' => $this->connectorType,
-            ]);
-            return;
-        }
-
         $connector = $connectorManager->get($this->connectorType);
         
         if (!$connector) {
             Log::warning('Connector not found', [
                 'connector' => $this->connectorType,
-                'submission_id' => $this->submissionId,
+                'submission_id' => $this->submission->id(),
             ]);
             return;
         }
 
         try {
-            $connector->process($submission, $this->connectorConfig);
+            $connector->process($this->submission, $this->connectorConfig);
             
             Log::info('Connector processed successfully', [
                 'connector' => $this->connectorType,
-                'submission_id' => $this->submissionId,
+                'submission_id' => $this->submission->id(),
             ]);
         } catch (\Exception $e) {
             Log::error('Connector processing failed in job', [
                 'connector' => $this->connectorType,
-                'submission_id' => $this->submissionId,
+                'submission_id' => $this->submission->id(),
                 'error' => $e->getMessage(),
                 'attempt' => $this->attempts(),
             ]);
@@ -71,7 +61,7 @@ class ProcessConnectorJob implements ShouldQueue
     {
         Log::error('Connector job failed permanently', [
             'connector' => $this->connectorType,
-            'submission_id' => $this->submissionId,
+            'submission_id' => $this->submission->id(),
             'error' => $exception->getMessage(),
         ]);
     }
