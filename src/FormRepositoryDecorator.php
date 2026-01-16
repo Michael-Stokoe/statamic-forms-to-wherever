@@ -12,33 +12,22 @@ class FormRepositoryDecorator implements FormRepository
 
     public function make($handle = null)
     {
-        return new Form($handle);
+        return $this->repository->make($handle);
     }
 
     public function find($id)
     {
-        $form = $this->repository->find($id);
-        return $form ? $this->wrapForm($form) : null;
+        return $this->repository->find($id);
     }
 
     public function findByHandle($handle)
     {
-        $form = $this->repository->findByHandle($handle);
-        return $form ? $this->wrapForm($form) : null;
+        return $this->repository->findByHandle($handle);
     }
 
     public function all()
     {
-        return $this->repository->all()->map(fn($form) => $this->wrapForm($form));
-    }
-
-    protected function wrapForm($originalForm)
-    {
-        $form = new Form();
-        $form->handle($originalForm->handle());
-        $form->title($originalForm->title());
-        $form->blueprint($originalForm->blueprint());
-        return $form;
+        return $this->repository->all();
     }
 
     public function __call($method, $args)
