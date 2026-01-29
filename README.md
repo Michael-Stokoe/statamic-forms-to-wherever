@@ -1,6 +1,7 @@
 # Forms To Wherever
 
-**The ultimate form connector system for Statamic** - Send your form submissions anywhere with zero frontend modifications required.
+**The ultimate form connector system for Statamic 5** - Send your form submissions anywhere with zero frontend modifications required.
+## Statamic 6 should work but is untested thus far.
 
 Transform your Statamic forms into powerful data collection tools that seamlessly integrate with any external service, API, or webhook endpoint. Whether you're connecting to CRMs, email marketing platforms, analytics tools, or custom APIs, Forms To Wherever makes it effortless.
 
