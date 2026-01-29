@@ -31,7 +31,7 @@ class ProcessConnectors
         }
 
         foreach ($connectorFields as $fieldHandle => $field) {
-            $fieldConfig = $form->blueprint()->field($fieldHandle)->config();
+            $fieldConfig = $field->config();
             $connectors = $this->configParser->parseFromBlueprint($fieldConfig);
             $useAsync = $fieldConfig['async_processing'] ?? true;
 
