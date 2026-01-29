@@ -23,7 +23,7 @@ class ProcessConnectors
         $form = $submission->form();
 
         $connectorFields = $form->blueprint()->fields()->all()->filter(function ($field) {
-            return $field->fieldtype()->handle() === 'form_connectors';
+            return $field->type() === 'form_connectors';
         });
 
         if ($connectorFields->isEmpty()) {
@@ -31,7 +31,7 @@ class ProcessConnectors
         }
 
         foreach ($connectorFields as $fieldHandle => $field) {
-            $fieldConfig = $form->blueprint()->field($fieldHandle)->config();
+            $fieldConfig = $field->config();
             $connectors = $this->configParser->parseFromBlueprint($fieldConfig);
             $useAsync = $fieldConfig['async_processing'] ?? true;
 
