@@ -11,6 +11,83 @@ use Statamic\Forms\Submission;
 
 class WebhookConnector implements ConnectorInterface
 {
+    protected static array $fieldset = [
+        [
+            'handle' => 'url',
+            'field' => [
+                'type' => 'text',
+                'display' => 'Webhook URL',
+                'instructions' => 'The URL to send the form data to',
+                'validate' => 'required_if:webhook_enabled,true|sometimes'
+            ],
+        ],
+        [
+            'handle' => 'method',
+            'field' => [
+                'type' => 'select',
+                'display' => 'HTTP Method',
+                'default' => 'POST',
+                'options' => [
+                    'POST' => 'POST',
+                    'PUT' => 'PUT',
+                    'PATCH' => 'PATCH',
+                ],
+            ],
+        ],
+        [
+            'handle' => 'auth_header',
+            'field' => [
+                'type' => 'text',
+                'display' => 'Authorization Header',
+                'instructions' => 'Optional: Bearer token or API key for authentication',
+            ],
+        ],
+        [
+            'handle' => 'secret_key',
+            'field' => [
+                'type' => 'text',
+                'display' => 'Secret Key',
+                'instructions' => 'Optional: Secret key for request signing (HMAC-SHA256)',
+            ],
+        ],
+        [
+            'handle' => 'allowed_ips',
+            'field' => [
+                'type' => 'textarea',
+                'display' => 'Allowed IPs',
+                'instructions' => 'Optional: Comma-separated list of allowed IP addresses/ranges',
+            ],
+        ],
+        [
+            'handle' => 'field_mapping',
+            'field' => [
+                'type' => 'grid',
+                'display' => 'Field Mapping',
+                'instructions' => 'Map form fields to webhook payload keys',
+                'fields' => [
+                    [
+                        'handle' => 'form_field',
+                        'field' => [
+                            'type' => 'text',
+                            'display' => 'Form Field',
+                            'instructions' => 'The handle of the form field',
+                            'width' => 50,
+                        ],
+                    ],
+                    [
+                        'handle' => 'webhook_key',
+                        'field' => [
+                            'type' => 'text',
+                            'display' => 'Webhook Key',
+                            'instructions' => 'The key to use in the webhook payload',
+                            'width' => 50,
+                        ],
+                    ],
+                ],
+            ],
+        ],
+    ];
+
     public function handle(): string
     {
         return 'webhook';
@@ -23,82 +100,7 @@ class WebhookConnector implements ConnectorInterface
 
     public function fieldset(): array
     {
-        return [
-            [
-                'handle' => 'url',
-                'field' => [
-                    'type' => 'text',
-                    'display' => 'Webhook URL',
-                    'instructions' => 'The URL to send the form data to',
-                    'validate' => 'required_if:webhook_enabled,true|sometimes'
-                ],
-            ],
-            [
-                'handle' => 'method',
-                'field' => [
-                    'type' => 'select',
-                    'display' => 'HTTP Method',
-                    'default' => 'POST',
-                    'options' => [
-                        'POST' => 'POST',
-                        'PUT' => 'PUT',
-                        'PATCH' => 'PATCH',
-                    ],
-                ],
-            ],
-            [
-                'handle' => 'auth_header',
-                'field' => [
-                    'type' => 'text',
-                    'display' => 'Authorization Header',
-                    'instructions' => 'Optional: Bearer token or API key for authentication',
-                ],
-            ],
-            [
-                'handle' => 'secret_key',
-                'field' => [
-                    'type' => 'text',
-                    'display' => 'Secret Key',
-                    'instructions' => 'Optional: Secret key for request signing (HMAC-SHA256)',
-                ],
-            ],
-            [
-                'handle' => 'allowed_ips',
-                'field' => [
-                    'type' => 'textarea',
-                    'display' => 'Allowed IPs',
-                    'instructions' => 'Optional: Comma-separated list of allowed IP addresses/ranges',
-                ],
-            ],
-            [
-                'handle' => 'field_mapping',
-                'field' => [
-                    'type' => 'grid',
-                    'display' => 'Field Mapping',
-                    'instructions' => 'Map form fields to webhook payload keys',
-                    'fields' => [
-                        [
-                            'handle' => 'form_field',
-                            'field' => [
-                                'type' => 'text',
-                                'display' => 'Form Field',
-                                'instructions' => 'The handle of the form field',
-                                'width' => 50,
-                            ],
-                        ],
-                        [
-                            'handle' => 'webhook_key',
-                            'field' => [
-                                'type' => 'text',
-                                'display' => 'Webhook Key',
-                                'instructions' => 'The key to use in the webhook payload',
-                                'width' => 50,
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        return self::$fieldset;
     }
 
     public function process(Submission $submission, array $config): void
