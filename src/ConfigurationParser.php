@@ -23,6 +23,8 @@ class ConfigurationParser
 
             $config = ['type' => $handle, 'enabled' => true];
             
+            $isValid = true;
+
             foreach ($connector->fieldset() as $field) {
                 $key = "{$handle}_{$field['handle']}";
                 if (isset($blueprintConfig[$key])) {
@@ -30,24 +32,19 @@ class ConfigurationParser
                 } elseif (isset($field['field']['default'])) {
                     $config[$field['handle']] = $field['field']['default'];
                 }
+
+                $validation = $field['field']['validate'] ?? '';
+                if (str_contains($validation, 'required') && empty($config[$field['handle']])) {
+                    $isValid = false;
+                    break;
+                }
             }
             
-            if ($this->isValidConfig($connector, $config)) {
+            if ($isValid) {
                 $connectors[] = $config;
             }
         }
         
         return $connectors;
-    }
-
-    protected function isValidConfig(ConnectorInterface $connector, array $config): bool
-    {
-        foreach ($connector->fieldset() as $field) {
-            $validation = $field['field']['validate'] ?? '';
-            if (str_contains($validation, 'required') && empty($config[$field['handle']])) {
-                return false;
-            }
-        }
-        return true;
     }
 }
