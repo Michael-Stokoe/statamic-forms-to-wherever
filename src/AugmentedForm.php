@@ -7,8 +7,14 @@ use Statamic\Forms\AugmentedForm as BaseAugmentedForm;
 
 class AugmentedForm extends BaseAugmentedForm
 {
+    private $filteredFields;
+
     public function get($key): Value
     {
+        if ($key === 'fields' && isset($this->filteredFields)) {
+            return $this->filteredFields;
+        }
+
         $value = parent::get($key);
         
         if ($key === 'fields' && $value instanceof Value) {
@@ -21,7 +27,7 @@ class AugmentedForm extends BaseAugmentedForm
                     }
                     return ($field['type'] ?? '') === 'form_connectors';
                 })->values();
-                return new Value($filtered, $value->handle(), $value->fieldtype(), $value->augmentable());
+                return $this->filteredFields = new Value($filtered, $value->handle(), $value->fieldtype(), $value->augmentable());
             }
             
             if (is_array($fields)) {
@@ -31,7 +37,7 @@ class AugmentedForm extends BaseAugmentedForm
                     }
                     return ($field['type'] ?? '') !== 'form_connectors';
                 }));
-                return new Value($filtered, $value->handle(), $value->fieldtype(), $value->augmentable());
+                return $this->filteredFields = new Value($filtered, $value->handle(), $value->fieldtype(), $value->augmentable());
             }
         }
         
