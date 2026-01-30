@@ -204,12 +204,12 @@ MIT License - Build amazing things with it!
 
 ## Support
 
-Found a bug or need a feature? Visit the [Statamic Marketplace](https://statamic.com/addons/stokoe/forms-to-wherever) or contribute to make Forms To Wherever even better.
+Found a bug or need a feature? Visit the [Statamic Marketplace](https://statamic.com/addons/stokoe-dev/forms-to-wherever) or contribute to make Forms To Wherever even better.
 
 ## Available Connectors
 
-- **[Mailchimp Connector](https://statamic.com/addons/stokoe/forms-to-mailchimp-connector)** - Connect forms to Mailchimp lists with advanced field mapping
-- **[HubSpot Connector](https://statamic.com/addons/stokoe/forms-to-hubspot-connector)** - Create and update HubSpot contacts with custom property mapping
-- **[ConvertKit Connector](https://statamic.com/addons/stokoe/forms-to-convertkit-connector)** - Subscribe to ConvertKit forms with tagging and custom fields
-- **[ActiveCampaign Connector](https://statamic.com/addons/stokoe/forms-to-activecampaign-connector)** - Create contacts, manage lists, and apply tags in ActiveCampaign
-- **[Salesforce Connector](https://statamic.com/addons/stokoe/forms-to-salesforce-connector)** - Create Leads, Contacts, and other Salesforce objects
+- **[Mailchimp Connector](https://statamic.com/addons/stokoe-dev/forms-to-mailchimp-connector)** - Connect forms to Mailchimp lists with advanced field mapping
+- **[HubSpot Connector](https://statamic.com/addons/stokoe-dev/forms-to-hubspot-connector)** - Create and update HubSpot contacts with custom property mapping
+- **[ConvertKit Connector](https://statamic.com/addons/stokoe-dev/forms-to-converkit-connector)** - Subscribe to ConvertKit forms with tagging and custom fields
+- **[ActiveCampaign Connector](https://statamic.com/addons/stokoe-dev/forms-to-activecampaign-connector)** - Create contacts, manage lists, and apply tags in ActiveCampaign
+- **[Salesforce Connector](https://statamic.com/addons/stokoe-dev/forms-to-salesforce-connector)** - Create Leads, Contacts, and other Salesforce objects
