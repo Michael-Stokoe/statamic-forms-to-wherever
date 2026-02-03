@@ -150,7 +150,15 @@ class WebhookConnector implements ConnectorInterface
                 $webhookKey = $mapping['webhook_key'] ?? null;
 
                 if ($formField && $webhookKey && $submission->has($formField)) {
-                    $data[$webhookKey] = $submission->get($formField);
+                    $value = $submission->get($formField);
+                    
+                    // Skip null/empty values to allow multiple conditional fields
+                    // to map to the same webhook key (first non-empty value wins)
+                    if (array_key_exists($webhookKey, $data) && ($value === null || $value === '')) {
+                        continue;
+                    }
+                    
+                    $data[$webhookKey] = $value;
                 }
             }
         } else {

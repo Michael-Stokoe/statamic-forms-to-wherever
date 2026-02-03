@@ -1,7 +1,6 @@
 # Forms To Wherever
 
-**The ultimate form connector system for Statamic 5** - Send your form submissions anywhere with zero frontend modifications required.
-## Statamic 6 should work but is untested thus far.
+**The ultimate form connector system for Statamic** - Send your form submissions anywhere with zero frontend modifications required.
 
 Transform your Statamic forms into powerful data collection tools that seamlessly integrate with any external service, API, or webhook endpoint. Whether you're connecting to CRMs, email marketing platforms, analytics tools, or custom APIs, Forms To Wherever makes it effortless.
 
@@ -194,9 +193,29 @@ Transform your Statamic forms from simple contact forms into powerful data colle
 
 ## Requirements
 
-- PHP 8.2+
+- PHP 8.2+ (8.3+ for Statamic 6)
 - Laravel 10.0+ | 11.0+ | 12.0+
-- Statamic 4.0+ | 5.0+
+- Statamic 4.0+ | 5.0+ | 6.0+
+
+## Upgrading to Statamic 6
+
+If you're upgrading to Statamic 6, you'll need to recompile the addon's assets due to the Vue 3 migration:
+
+```bash
+cd vendor/stokoe/forms-to-wherever
+npm install
+npm run build
+```
+
+Alternatively, if you've published the addon's assets, rebuild from your project root after updating your own `package.json` to include the Statamic dev dependency:
+
+```json
+{
+    "devDependencies": {
+        "@statamic/cms": "file:./vendor/statamic/cms/resources/dist-package"
+    }
+}
+```
 
 ## License
 

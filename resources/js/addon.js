@@ -1,4 +1,6 @@
-Statamic.component('form_connectors-fieldtype', {
+import { FieldtypeMixin as Fieldtype } from '@statamic/cms';
+
+Statamic.$components.register('form_connectors-fieldtype', {
     mixins: [Fieldtype],
     
     template: `
@@ -8,7 +10,7 @@ Statamic.component('form_connectors-fieldtype', {
             :meta="meta"
             :name="name"
             :handle="handle"
-            @input="$emit('input', $event)"
+            @update:value="update($event)"
         />
     `,
     

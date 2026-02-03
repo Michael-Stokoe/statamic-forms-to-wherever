@@ -5,11 +5,13 @@
         :meta="meta"
         :name="name"
         :handle="handle"
-        @input="$emit('input', $event)"
+        @update:value="update($event)"
     />
 </template>
 
 <script>
+import { FieldtypeMixin as Fieldtype } from '@statamic/cms';
+
 export default {
     mixins: [Fieldtype],
     
