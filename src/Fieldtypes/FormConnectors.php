@@ -45,6 +45,19 @@ class FormConnectors extends Fieldtype
                     'width' => 100,
                     'if' => ['async_processing' => 'equals false'],
                 ],
+                'condition_field' => [
+                    'display' => 'Condition Field',
+                    'type' => 'text',
+                    'instructions' => 'Only run these connectors when this form field handle has the value specified below. Leave blank to always run.',
+                    'width' => 50,
+                ],
+                'condition_value' => [
+                    'display' => 'Condition Value',
+                    'type' => 'text',
+                    'instructions' => 'The value the condition field must match for these connectors to run',
+                    'width' => 50,
+                    'if' => ['condition_field' => 'not empty'],
+                ],
             ],
         ];
 
