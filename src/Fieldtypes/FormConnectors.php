@@ -37,6 +37,14 @@ class FormConnectors extends Fieldtype
                     'default' => true,
                     'width' => 100,
                 ],
+                'throw_on_error' => [
+                    'display' => 'Throw on Error',
+                    'type' => 'toggle',
+                    'instructions' => 'Re-throw connector exceptions during synchronous processing, allowing your frontend to catch and display errors to users',
+                    'default' => false,
+                    'width' => 100,
+                    'if' => ['async_processing' => 'equals false'],
+                ],
             ],
         ];
 

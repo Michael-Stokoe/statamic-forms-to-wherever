@@ -34,6 +34,7 @@ class ProcessConnectors
             $fieldConfig = $field->config();
             $connectors = $this->configParser->parseFromBlueprint($fieldConfig);
             $useAsync = $fieldConfig['async_processing'] ?? true;
+            $throwOnError = $fieldConfig['throw_on_error'] ?? false;
 
             foreach ($connectors as $connectorConfig) {
                 if ($useAsync) {
@@ -43,13 +44,13 @@ class ProcessConnectors
                         $connectorConfig
                     );
                 } else {
-                    $this->processSynchronously($submission, $connectorConfig);
+                    $this->processSynchronously($submission, $connectorConfig, $throwOnError);
                 }
             }
         }
     }
 
-    protected function processSynchronously($submission, array $connectorConfig): void
+    protected function processSynchronously($submission, array $connectorConfig, bool $throwOnError = false): void
     {
         $connector = $this->connectorManager->get($connectorConfig['type']);
 
@@ -71,6 +72,10 @@ class ProcessConnectors
                 'form' => $submission->form()->handle(),
                 'submission_id' => $submission->id(),
             ]);
+
+            if ($throwOnError) {
+                throw $e;
+            }
         }
     }
 }
