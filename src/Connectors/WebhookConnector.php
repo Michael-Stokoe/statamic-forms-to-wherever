@@ -172,15 +172,19 @@ class WebhookConnector implements ConnectorInterface
             $headers['Authorization'] = $authHeader;
         }
         
+        $payload = json_encode($data);
+
         // Add signature header
         if ($secretKey) {
-            $payload = json_encode($data);
             $signature = hash_hmac('sha256', $payload, $secretKey);
             $headers['X-Signature-SHA256'] = 'sha256=' . $signature;
         }
 
         try {
-            $response = Http::timeout(10)->withHeaders($headers)->$method($url, $data);
+            $response = Http::timeout(10)
+                ->withHeaders($headers)
+                ->withBody($payload, 'application/json')
+                ->$method($url);
             
             if ($response->successful()) {
                 Log::info('Webhook request successful', [
