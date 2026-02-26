@@ -136,7 +136,6 @@ public function bootAddon()
 ## 📚 Documentation
 
 - **[Building Custom Connectors](CONNECTOR_INSTRUCTIONS.md)** - Complete guide with examples
-- **[Technical Implementation](OVERRIDE.md)** - Deep dive into the architecture
 
 ## 🏗️ Architecture Highlights
 
