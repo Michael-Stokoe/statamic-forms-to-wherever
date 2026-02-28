@@ -136,7 +136,6 @@ public function bootAddon()
 ## 📚 Documentation
 
 - **[Building Custom Connectors](CONNECTOR_INSTRUCTIONS.md)** - Complete guide with examples
-- **[Technical Implementation](OVERRIDE.md)** - Deep dive into the architecture
 
 ## 🏗️ Architecture Highlights
 
@@ -225,7 +224,7 @@ MIT License - Build amazing things with it!
 
 Found a bug or need a feature? Visit the [Statamic Marketplace](https://statamic.com/addons/stokoe-dev/forms-to-wherever) or contribute to make Forms To Wherever even better.
 
-## Available Connectors -- [Update in progress]
+## Available Connectors
 
 - **[Mailchimp Connector](https://statamic.com/addons/stokoe-dev/forms-to-mailchimp-connector)** - Connect forms to Mailchimp lists with advanced field mapping
 - **[HubSpot Connector](https://statamic.com/addons/stokoe-dev/forms-to-hubspot-connector)** - Create and update HubSpot contacts with custom property mapping

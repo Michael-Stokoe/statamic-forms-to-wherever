@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Stokoe\FormsToWherever\Connectors;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Stokoe\FormsToWherever\Contracts\ConnectorInterface;
@@ -181,31 +182,44 @@ class WebhookConnector implements ConnectorInterface
         }
 
         try {
-            $response = Http::timeout(10)
+            Http::async()
+                ->timeout(10)
                 ->withHeaders($headers)
                 ->withBody($payload, 'application/json')
-                ->$method($url);
-            
-            if ($response->successful()) {
-                Log::info('Webhook request successful', [
-                    'status' => $response->status(),
-                    'url' => $url,
-                    'method' => $method,
-                    'form' => $submission->form()->handle(),
-                    'submission_id' => $submission->id(),
-                    'response_time' => $response->transferStats?->getTransferTime(),
-                ]);
-            } else {
-                Log::warning('Webhook request failed', [
-                    'status' => $response->status(),
-                    'url' => $url,
-                    'method' => $method,
-                    'form' => $submission->form()->handle(),
-                    'submission_id' => $submission->id(),
-                ]);
-            }
+                ->$method($url)
+                ->then(
+                    function (Response $response) use ($url, $method, $submission) {
+                        if ($response->successful()) {
+                            Log::info('Webhook request successful', [
+                                'status' => $response->status(),
+                                'url' => $url,
+                                'method' => $method,
+                                'form' => $submission->form()->handle(),
+                                'submission_id' => $submission->id(),
+                                'response_time' => $response->transferStats?->getTransferTime(),
+                            ]);
+                        } else {
+                            Log::warning('Webhook request failed', [
+                                'status' => $response->status(),
+                                'url' => $url,
+                                'method' => $method,
+                                'form' => $submission->form()->handle(),
+                                'submission_id' => $submission->id(),
+                            ]);
+                        }
+                    },
+                    function (\Exception $e) use ($url, $method, $submission) {
+                        Log::error('Webhook request exception', [
+                            'error' => $e->getMessage(),
+                            'url' => $url,
+                            'method' => $method,
+                            'form' => $submission->form()->handle(),
+                            'submission_id' => $submission->id(),
+                        ]);
+                    }
+                );
         } catch (\Exception $e) {
-            Log::error('Webhook request exception', [
+            Log::error('Webhook request initiation exception', [
                 'error' => $e->getMessage(),
                 'url' => $url,
                 'method' => $method,
